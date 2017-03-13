@@ -1,5 +1,8 @@
 package org.zyh.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +15,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "URLTest")
-public class URLTestModel {
+@Getter
+@Setter
+public class URLTest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,19 +28,4 @@ public class URLTestModel {
     @Column(nullable = false)
     private String expectValue;
 
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getExpectValue() {
-        return expectValue;
-    }
-
-    public void setExpectValue(String expectValue) {
-        this.expectValue = expectValue;
-    }
 }

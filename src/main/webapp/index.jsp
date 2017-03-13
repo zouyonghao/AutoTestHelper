@@ -5,6 +5,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h1><a href="app/hello">Hello</a></h1>
+        <h1>AutoTestHelper OK!</h1>
     </body>
 </html>
