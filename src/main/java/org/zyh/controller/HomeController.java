@@ -1,16 +1,24 @@
 package org.zyh.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @author zouyonghao
  */
-@RestController
+@Controller
 public class HomeController {
 
-    @RequestMapping("/home")
+    @ResponseBody
+    @PostMapping("/home")
     public String home() {
+        return "home";
+    }
+
+    @GetMapping("/home")
+    public String getHome() {
         return "home";
     }
 
