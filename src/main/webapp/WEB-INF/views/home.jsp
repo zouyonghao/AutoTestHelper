@@ -75,20 +75,11 @@
                         <th data-field="id">id</th>
                         <th data-field="name">URL</th>
                         <th data-field="price">Expect</th>
+                        <th data-field="action">Action</th>
                     </tr>
                     </thead>
 
-                    <tbody>
-                    <tr>
-                        <td>0</td>
-                        <td>http://abc.com</td>
-                        <td>{"a":"value"}</td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>http://bcd.com</td>
-                        <td>some value</td>
-                    </tr>
+                    <tbody id="testcase-table">
                     </tbody>
                 </table>
             </div>
@@ -101,10 +92,98 @@
             <i class="mdi-content-add"></i>
         </a>
     </div>
+
+    <%-- just a circle --%>
+    <div class="preloader-wrapper small active" id="spinner">
+        <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div><div class="gap-patch">
+            <div class="circle"></div>
+        </div><div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+        </div>
+
+        <div class="spinner-layer spinner-red">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div><div class="gap-patch">
+            <div class="circle"></div>
+        </div><div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+        </div>
+
+        <div class="spinner-layer spinner-yellow">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div><div class="gap-patch">
+            <div class="circle"></div>
+        </div><div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+        </div>
+
+        <div class="spinner-layer spinner-green">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div><div class="gap-patch">
+            <div class="circle"></div>
+        </div><div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+        </div>
+    </div>
 </div>
 
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="resources/materialize/js/materialize.min.js"></script>
+
+<script>
+
+    $("#spinner").hide();
+    $.ajax({
+        method: "POST",
+        url: "url/list",
+        data: {
+            pageSize: 10,
+            pageNo: 1
+        }
+    }).success(function (result) {
+        result.forEach(function (item) {
+            var tr = $("<tr></tr>");
+            tr.append($("<td>" + item["id"] + "</td>"));
+            tr.append($("<td>" + item["url"] + "</td>"));
+            tr.append($("<td>" + item["expectValue"] + "</td>"));
+            tr.append($('<td><a href="#" class="testcase-execute">execute</a></td>'));
+            $("#testcase-table").append(tr);
+        })
+    });
+    $("#testcase-table").on("click", ".testcase-execute", function () {
+        var tr = $(this).parent().parent();
+        var id = tr.children()[0].innerHTML;
+        var url = tr.children()[1].innerHTML;
+        var expect = tr.children()[2].innerHTML;
+        $("#spinner").show();
+        $.ajax({
+            method: "POST",
+            url: "url/execute",
+            data: {
+                id: id
+            }
+        }).success(function (result) {
+            $("#spinner").hide();
+            result = JSON.parse(result);
+            if (result["realValue"] == expect) {
+                Materialize.toast('Test passed!', 4000);
+            } else {
+                Materialize.toast('Test not passed!', 4000)
+            }
+        })
+    })
+</script>
+
 </body>
 </html>
