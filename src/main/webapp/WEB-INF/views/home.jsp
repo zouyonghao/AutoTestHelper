@@ -86,55 +86,91 @@
         </div>
     </div>
 
-
-    <div class="fixed-action-btn" style="bottom: 50px; right: 19px;">
-        <a class="btn-floating btn-large">
-            <i class="mdi-content-add"></i>
-        </a>
-    </div>
-
     <%-- just a circle --%>
     <div class="preloader-wrapper small active" id="spinner">
         <div class="spinner-layer spinner-blue">
             <div class="circle-clipper left">
                 <div class="circle"></div>
-            </div><div class="gap-patch">
-            <div class="circle"></div>
-        </div><div class="circle-clipper right">
-            <div class="circle"></div>
-        </div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
         </div>
 
         <div class="spinner-layer spinner-red">
             <div class="circle-clipper left">
                 <div class="circle"></div>
-            </div><div class="gap-patch">
-            <div class="circle"></div>
-        </div><div class="circle-clipper right">
-            <div class="circle"></div>
-        </div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
         </div>
 
         <div class="spinner-layer spinner-yellow">
             <div class="circle-clipper left">
                 <div class="circle"></div>
-            </div><div class="gap-patch">
-            <div class="circle"></div>
-        </div><div class="circle-clipper right">
-            <div class="circle"></div>
-        </div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
         </div>
 
         <div class="spinner-layer spinner-green">
             <div class="circle-clipper left">
                 <div class="circle"></div>
-            </div><div class="gap-patch">
-            <div class="circle"></div>
-        </div><div class="circle-clipper right">
-            <div class="circle"></div>
-        </div>
+            </div>
+            <div class="gap-patch">
+                <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+                <div class="circle"></div>
+            </div>
         </div>
     </div>
+
+
+    <div class="fixed-action-btn" style="bottom: 50px; right: 19px;">
+        <a class="btn-floating btn btn-large modal-trigger" href="#modal1">
+            <i class="mdi-content-add"></i>
+        </a>
+    </div>
+
+    <%-- modal --%>
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4>Create a new test case</h4>
+            <div class="row">
+                <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="create_url" type="text" class="validate">
+                            <label for="create_url">URL</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <input id="create_expect" type="text" class="validate">
+                            <label for="create_expect">Expected Value</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <%--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>--%>
+            <button id="create_action" class="modal-action modal-close waves-effect waves-green btn-flat ">Create</button>
+            <button id="create_cancel" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+        </div>
+    </div>
+
 </div>
 
 <!--Import jQuery before materialize.js-->
@@ -142,47 +178,70 @@
 <script type="text/javascript" src="resources/materialize/js/materialize.min.js"></script>
 
 <script>
+    $(document).ready(function () {
 
-    $("#spinner").hide();
-    $.ajax({
-        method: "POST",
-        url: "url/list",
-        data: {
-            pageSize: 10,
-            pageNo: 1
-        }
-    }).success(function (result) {
-        result.forEach(function (item) {
-            var tr = $("<tr></tr>");
-            tr.append($("<td>" + item["id"] + "</td>"));
-            tr.append($("<td>" + item["url"] + "</td>"));
-            tr.append($("<td>" + item["expectValue"] + "</td>"));
-            tr.append($('<td><a href="#" class="testcase-execute">execute</a></td>'));
-            $("#testcase-table").append(tr);
-        })
-    });
-    $("#testcase-table").on("click", ".testcase-execute", function () {
-        var tr = $(this).parent().parent();
-        var id = tr.children()[0].innerHTML;
-        var url = tr.children()[1].innerHTML;
-        var expect = tr.children()[2].innerHTML;
-        $("#spinner").show();
+        // this is for the table list.
         $.ajax({
             method: "POST",
-            url: "url/execute",
+            url: "url/list",
             data: {
-                id: id
+                pageSize: 10,
+                pageNo: 1
             }
         }).success(function (result) {
-            $("#spinner").hide();
-            result = JSON.parse(result);
-            if (result["realValue"] == expect) {
-                Materialize.toast('Test passed!', 4000);
-            } else {
-                Materialize.toast('Test not passed!', 4000)
-            }
+            result.forEach(function (item) {
+                var tr = $("<tr></tr>");
+                tr.append($("<td>" + item["id"] + "</td>"));
+                tr.append($("<td>" + item["url"] + "</td>"));
+                tr.append($("<td>" + item["expectValue"] + "</td>"));
+                tr.append($('<td><a href="#" class="testcase-execute">execute</a></td>'));
+                $("#testcase-table").append(tr);
+            })
+        });
+
+        // this is for execute
+        $("#spinner").hide();
+        $("#testcase-table").on("click", ".testcase-execute", function () {
+            var tr = $(this).parent().parent();
+            var id = tr.children()[0].innerHTML;
+            var url = tr.children()[1].innerHTML;
+            var expect = tr.children()[2].innerHTML;
+            $("#spinner").show();
+            $.ajax({
+                method: "POST",
+                url: "url/execute",
+                data: {
+                    id: id
+                }
+            }).success(function (result) {
+                $("#spinner").hide();
+                result = JSON.parse(result);
+                if (result["realValue"] == expect) {
+                    Materialize.toast('Test passed!', 4000);
+                } else {
+                    Materialize.toast('Test not passed!', 4000)
+                }
+            })
+        });
+
+        // for add.
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal').modal();
+        $("#create_action").click(function () {
+            $.ajax({
+                method: "POST",
+                url: "url/create",
+                data: {
+                    url: $("#create_url").val(),
+                    expect: $("#create_expect").val()
+                }
+            }).success(function (result) {
+                if (result == "success") {
+                    window.location.replace("home");
+                }
+            });
         })
-    })
+    });
 </script>
 
 </body>

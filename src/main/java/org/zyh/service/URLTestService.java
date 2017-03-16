@@ -44,7 +44,7 @@ public class URLTestService {
     public List<URLTest> list(final int pageSize, final int pageNo) {
         return (List<URLTest>) hibernateTemplate.execute(new HibernateCallback<List>() {
             public List doInHibernate(Session session) throws HibernateException {
-                Query query = session.createQuery("from URLTest");
+                Query query = session.createQuery("from URLTest order by id desc");
                 query.setFirstResult((pageNo - 1) * pageSize);
                 query.setMaxResults(pageSize);
                 return query.<URLTest>list();
