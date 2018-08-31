@@ -15,3 +15,4 @@ connect to db
 run ```init.sql```
 
 start the application in tomcat or otherwise
+
