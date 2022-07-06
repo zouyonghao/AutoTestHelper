@@ -2,7 +2,7 @@ package org.zyh.service;
 
 import org.apache.http.client.fluent.Request;
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.HibernateCallback;
@@ -42,12 +42,12 @@ public class URLTestService {
 
     @Transactional
     public List<URLTest> list(final int pageSize, final int pageNo) {
-        return (List<URLTest>) hibernateTemplate.execute(new HibernateCallback<List>() {
-            public List doInHibernate(Session session) throws HibernateException {
-                Query query = session.createQuery("from URLTest order by id desc");
+        return hibernateTemplate.execute(new HibernateCallback<List<URLTest>>() {
+            public List<URLTest> doInHibernate(Session session) throws HibernateException {
+                Query<URLTest> query = session.createQuery("from URLTest order by id desc");
                 query.setFirstResult((pageNo - 1) * pageSize);
                 query.setMaxResults(pageSize);
-                return query.<URLTest>list();
+                return query.list();
             }
         });
     }
