@@ -42,13 +42,11 @@ public class URLTestService {
 
     @Transactional
     public List<URLTest> list(final int pageSize, final int pageNo) {
-        return hibernateTemplate.execute(new HibernateCallback<List<URLTest>>() {
-            public List<URLTest> doInHibernate(Session session) throws HibernateException {
-                Query<URLTest> query = session.createQuery("from URLTest order by id desc");
-                query.setFirstResult((pageNo - 1) * pageSize);
-                query.setMaxResults(pageSize);
-                return query.list();
-            }
+        return hibernateTemplate.execute(session -> {
+            Query<URLTest> query = session.createQuery("from URLTest order by id desc");
+            query.setFirstResult((pageNo - 1) * pageSize);
+            query.setMaxResults(pageSize);
+            return query.list();
         });
     }
 
@@ -58,6 +56,7 @@ public class URLTestService {
         String realValue = null;
         boolean result = false;
         try {
+            assert urlTest != null;
             realValue = execute(urlTest.getUrl());
             result = true;
         } catch (IOException e) {

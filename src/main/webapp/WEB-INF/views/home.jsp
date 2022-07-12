@@ -1,10 +1,10 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 
 <!DOCTYPE html>
 <html>
 <head>
     <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <!--Import materialize.css-->
     <link type="text/css" rel="stylesheet" href="resources/materialize/css/materialize.min.css"
           media="screen,projection"/>
@@ -12,6 +12,7 @@
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link type="text/css" rel="stylesheet" href="resources/style.css"/>
+    <title>AutoTestHelper</title>
 </head>
 
 <body>
@@ -82,6 +83,9 @@
                     <tbody id="testcase-table">
                     </tbody>
                 </table>
+                <a class="btn modal-trigger" href="#modal1">
+                    <i class="mdi-content-add"></i>
+                </a>
             </div>
         </div>
     </div>
@@ -137,13 +141,6 @@
         </div>
     </div>
 
-
-    <div class="fixed-action-btn" style="bottom: 50px; right: 19px;">
-        <a class="btn-floating btn btn-large modal-trigger" href="#modal1">
-            <i class="mdi-content-add"></i>
-        </a>
-    </div>
-
     <%-- modal --%>
     <!-- Modal Structure -->
     <div id="modal1" class="modal">
@@ -166,8 +163,10 @@
         </div>
         <div class="modal-footer">
             <%--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Agree</a>--%>
-            <button id="create_action" class="modal-action modal-close waves-effect waves-green btn-flat ">Create</button>
-            <button id="create_cancel" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</button>
+            <button id="create_action" class="modal-action modal-close waves-effect waves-green btn-flat ">Create
+            </button>
+            <button id="create_cancel" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel
+            </button>
         </div>
     </div>
 
@@ -202,10 +201,10 @@
         // this is for execute
         $("#spinner").hide();
         $("#testcase-table").on("click", ".testcase-execute", function () {
-            var tr = $(this).parent().parent();
-            var id = tr.children()[0].innerHTML;
-            var url = tr.children()[1].innerHTML;
-            var expect = tr.children()[2].innerHTML;
+            const tr = $(this).parent().parent();
+            const id = tr.children()[0].innerHTML;
+            // const url = tr.children()[1].innerHTML;
+            const expect = tr.children()[2].innerHTML;
             $("#spinner").show();
             $.ajax({
                 method: "POST",
@@ -216,7 +215,7 @@
             }).success(function (result) {
                 $("#spinner").hide();
                 result = JSON.parse(result);
-                if (result["realValue"] == expect) {
+                if (result["realValue"] === expect) {
                     Materialize.toast('Test passed!', 4000);
                 } else {
                     Materialize.toast('Test not passed!', 4000)
@@ -236,7 +235,7 @@
                     expect: $("#create_expect").val()
                 }
             }).success(function (result) {
-                if (result == "success") {
+                if (result === "success") {
                     window.location.replace("home");
                 }
             });
