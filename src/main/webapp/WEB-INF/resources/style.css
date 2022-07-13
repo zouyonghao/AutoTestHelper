@@ -2,3 +2,13 @@ ul.side-nav.leftside-navigation {
     top: 64px;
     overflow: hidden;
 }
+
+.top-nav {
+    height: 40px;
+}
+
+a.brand-logo {
+    height: 40px;
+    font-size: 1.5em;
+    line-height: 40px;
+}
